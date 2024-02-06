@@ -62,14 +62,12 @@ export default async function Home({
         state={state}
         previousFrame={previousFrame}
       >
-        <FrameImage src="https://framesjs.org/og.png" />
+        <FrameImage src="/degen.jpeg" />
         {/* <FrameImage
           src={`data:image/svg+xml,${encodeURIComponent(imageSvg)}`}
         /> */}
         <FrameInput text="put some text here" />
-        <FrameButton onClick={dispatch}>
-          {state?.active === "1" ? "Active" : "Inactive"}
-        </FrameButton>
+        <FrameButton onClick={dispatch}>Check your AirDrop ranking</FrameButton>
         <FrameButton onClick={dispatch}>
           {state?.active === "2" ? "Active" : "Inactive"}
         </FrameButton>

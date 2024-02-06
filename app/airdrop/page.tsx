@@ -67,7 +67,7 @@ export default async function Home({
   const output = await client.refresh(queryID);
   // .then((executionResult) => console.log(executionResult.result?.rows));
 
-  console.log("output.result.rows[0]", output.result.rows[0]);
+  // console.log("output.result.rows[0]", output.result.rows[0]);
   console.log("State is:", state);
 
   // then, when done, return next frame
@@ -79,7 +79,9 @@ export default async function Home({
         state={state}
         previousFrame={previousFrame}
       >
-        <FrameImage src={output ? output.result.rows[0].avatar_url : image} />
+        {/* <FrameImage
+          src={output ? (output.result.rows[0].avatar_url as string) : image}
+        /> */}
         {/* <FrameImage
           src={`data:image/svg+xml,${encodeURIComponent(imageSvg)}`}
         /> */}
