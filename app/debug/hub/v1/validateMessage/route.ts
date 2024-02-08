@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   console.warn(
     "info: Mock hub: Validating message without verifying signature. This should only be used in development"
   );
-
+  // console.log("request", request);
   const contentType = request.headers.get("content-type") as string;
   let message;
 
@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
 
   // (Skip) 6. Check message body and envelope (signatures)
 
+  console.log("message", message);
   return Response.json(
     ValidationResponse.toJSON(
       ValidationResponse.create({

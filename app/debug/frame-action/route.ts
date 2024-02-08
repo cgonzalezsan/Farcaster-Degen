@@ -36,6 +36,8 @@ export async function POST(req: NextRequest) {
 
     console.log(frame);
 
+    console.log("frame", frame);
+    console.log("body", body);
     return Response.json({ frame, errors });
   } catch (err) {
     console.error(err);

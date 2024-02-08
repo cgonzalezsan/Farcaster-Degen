@@ -54,9 +54,6 @@ export default async function Home({
     previousFrame
   );
 
-  // Here: do a server side side effect either sync or async (using await), such as minting an NFT if you want.
-  // example: load the users credentials & check they have an NFT
-  const image = await generateImage(validMessage!);
   const { DUNE_API_KEY } = process.env;
 
   const client = new DuneClient(DUNE_API_KEY ?? "");
@@ -71,8 +68,14 @@ export default async function Home({
   const output = await client.refresh(queryID);
   // .then((executionResult) => console.log(executionResult.result?.rows));
 
-  // console.log("output.result.rows[0]", output.result.rows[0]);
-  console.log("State is:", state);
+  // console.log("State is:", state);
+  // console.log("initialState is:", initialState);
+  // console.log("previousFrame is:", previousFrame);
+  // console.log("validMessage is:", validMessage);
+
+  // Here: do a server side side effect either sync or async (using await), such as minting an NFT if you want.
+  // example: load the users credentials & check they have an NFT
+  const image = await generateImage(validMessage!, output);
 
   const fid = validMessage?.data.fid;
   const { buttonIndex, inputText: inputTextBytes } =
@@ -91,73 +94,10 @@ export default async function Home({
         state={state}
         previousFrame={previousFrame}
       >
-        <FrameImage
-          options={{
-            width: 1146,
-            height: 600,
-            fonts: [
-              {
-                name: "Inter",
-                data: interReg,
-                weight: 400,
-                style: "normal",
-              },
-            ],
-          }}
-        >
-          <div
-            style={{
-              display: "flex", // Use flex layout
-              flexDirection: "row", // Align items horizontally
-              alignItems: "stretch", // Stretch items to fill the container height
-              width: "100%",
-              height: "100vh", // Full viewport height
-              backgroundColor: "white",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                paddingLeft: 24,
-                paddingRight: 24,
-                lineHeight: 1.2,
-                fontSize: 36,
-                color: "black",
-                flex: 1,
-                overflow: "hidden",
-                marginTop: 24,
-              }}
-            >
-              {buttonIndex && fid && inputText ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    Button index: {buttonIndex}
-                  </div>
-                  <div style={{ display: "flex" }}>Fid: {fid}</div>
-                  <div style={{ display: "flex" }}>{inputText}</div>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  Hello world
-                </div>
-              )}
-            </div>
-          </div>
-        </FrameImage>
-
+        {/* <FrameImage
+          src={output ? (output.result.rows[0].avatar_url as string) : image}
+        /> */}
+        <FrameImage src={`data:image/svg+xml,${encodeURIComponent(image)}`} />
         <FrameInput text="put some text here" />
         <FrameButton onClick={dispatch}>
           {state?.active === "1" ? "Active" : "Inactive"}
