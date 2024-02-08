@@ -13,8 +13,12 @@ import Link from "next/link";
 import { DEBUG_HUB_OPTIONS } from "../debug/constants";
 import { generateImage } from "../generate-image";
 import { QueryParameter, DuneClient } from "@cowprotocol/ts-dune-client";
+import * as fs from "fs";
+import { join } from "path";
 // import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 // import { generateImage } from "./generate-image";
+const interRegPath = join(process.cwd(), "public/Inter-Regular.ttf");
+let interReg = fs.readFileSync(interRegPath);
 
 type State = {
   active: string;
@@ -70,21 +74,90 @@ export default async function Home({
   // console.log("output.result.rows[0]", output.result.rows[0]);
   console.log("State is:", state);
 
+  const fid = validMessage?.data.fid;
+  const { buttonIndex, inputText: inputTextBytes } =
+    validMessage?.data.frameActionBody || {};
+  const inputText = inputTextBytes
+    ? Buffer.from(inputTextBytes).toString("utf-8")
+    : undefined;
+
   // then, when done, return next frame
   return (
     <div>
       Starter kit. <Link href="/debug">Debug</Link>
       <FrameContainer
         postUrl="/frames"
+        pathname="/airdrop"
         state={state}
         previousFrame={previousFrame}
       >
-        {/* <FrameImage
-          src={output ? (output.result.rows[0].avatar_url as string) : image}
-        /> */}
-        {/* <FrameImage
-          src={`data:image/svg+xml,${encodeURIComponent(imageSvg)}`}
-        /> */}
+        <FrameImage
+          options={{
+            width: 1146,
+            height: 600,
+            fonts: [
+              {
+                name: "Inter",
+                data: interReg,
+                weight: 400,
+                style: "normal",
+              },
+            ],
+          }}
+        >
+          <div
+            style={{
+              display: "flex", // Use flex layout
+              flexDirection: "row", // Align items horizontally
+              alignItems: "stretch", // Stretch items to fill the container height
+              width: "100%",
+              height: "100vh", // Full viewport height
+              backgroundColor: "white",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: 24,
+                paddingRight: 24,
+                lineHeight: 1.2,
+                fontSize: 36,
+                color: "black",
+                flex: 1,
+                overflow: "hidden",
+                marginTop: 24,
+              }}
+            >
+              {buttonIndex && fid && inputText ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <div style={{ display: "flex" }}>
+                    Button index: {buttonIndex}
+                  </div>
+                  <div style={{ display: "flex" }}>Fid: {fid}</div>
+                  <div style={{ display: "flex" }}>{inputText}</div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  Hello world
+                </div>
+              )}
+            </div>
+          </div>
+        </FrameImage>
+
         <FrameInput text="put some text here" />
         <FrameButton onClick={dispatch}>
           {state?.active === "1" ? "Active" : "Inactive"}
